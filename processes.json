@@ -3,7 +3,7 @@
     {
       "name": "api",
       "script": "./src/server.js",
-      "watch": ["src", "views"],
+      "watch": ["src", "views", "db"],
       "max_restarts": 1,
       "instances": 4,
       "env": {

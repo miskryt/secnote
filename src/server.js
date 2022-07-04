@@ -1,3 +1,6 @@
+"use strict"
+require('dotenv').config();
+
 const express = require('express');
 const {TwingEnvironment, TwingLoaderFilesystem} = require('twing');
 let loader = new TwingLoaderFilesystem('./views');
@@ -5,8 +8,8 @@ let twing = new TwingEnvironment(loader);
 const fs = require('fs');
 const https = require('https');
 
-const processor = require('./app/processor.js')
-const Proc = new processor();
+const Worker = require('./app/worker.js')
+const worker = new Worker();
 
 const app = express();
 
@@ -19,12 +22,14 @@ const options = {
 
 };
 
-https.createServer(options, app).listen(3000);
+https.createServer(options, app).listen(process.env.PORT | 3000);
 
 app.set('view engine', 'twing');
 app.set('views', './views')
 
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const appname = require('../package.json').name;
 const renderOptions = {'appname': appname};
@@ -37,8 +42,10 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res) {
 
-    const result = Proc.CipherText();
-    renderOptions.result = result;
+    const text = req.body.text
+    const url = worker.CreateNote(text);
+
+    console.log(url)
 
     twing.render('pages/home.twig', renderOptions).then((output) => {
         res.end(output);

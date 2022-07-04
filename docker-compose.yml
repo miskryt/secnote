@@ -14,10 +14,10 @@ services:
     build:
       context: .
     environment:
-      DB_SCHEMA: postgres
+      DB_SCHEMA: default
       DB_USER: postgres
       DB_PASSWORD: qwerty
-      DB_HOST: postgres
+      DB_HOST: localhost
     depends_on:
       - postgres
     ports:
