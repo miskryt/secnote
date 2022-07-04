@@ -3,15 +3,11 @@
 const IDB = require('../interfaces/IDB');
 const ICrypt = require('../interfaces/ICrypt');
 
-class Worker{
+class Notepad {
 
     constructor() {
         this.crypt = new ICrypt();
         this.db = new IDB();
-    }
-
-    getNoteUrl(hash){
-        return "###";
     }
 
     /**
@@ -35,4 +31,4 @@ class Worker{
     }
 }
 
-module.exports = Worker;
+module.exports = Notepad;

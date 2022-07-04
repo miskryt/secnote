@@ -8,8 +8,8 @@ let twing = new TwingEnvironment(loader);
 const fs = require('fs');
 const https = require('https');
 
-const Worker = require('./app/worker.js')
-const worker = new Worker();
+const Notepad = require('./notepad/notepad');
+const notepad = new Notepad();
 
 const app = express();
 
@@ -43,7 +43,8 @@ app.get('/', function(req, res) {
 app.post('/', function(req, res) {
 
     const text = req.body.text
-    const url = worker.CreateNote(text);
+
+    const url = notepad.MakeNote(text);
 
     console.log(url)
 
