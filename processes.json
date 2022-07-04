@@ -2,8 +2,8 @@
   "apps": [
     {
       "name": "api",
-      "script": "./src/app.js",
-      "watch": ["src"],
+      "script": "./src/server.js",
+      "watch": ["src", "views"],
       "max_restarts": 1,
       "instances": 4,
       "env": {
