@@ -3,9 +3,9 @@
     {
       "name": "api",
       "script": "./src/server.js",
-      "watch": ["src", "views", "db"],
+      "watch": ["src", "views"],
       "max_restarts": 1,
-      "instances": 4,
+      "instances": 1,
       "env": {
         "PORT": 3000,
         "NODE_ENV": "production"

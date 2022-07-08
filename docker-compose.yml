@@ -1,5 +1,20 @@
 version: "3.9"
 services:
+  mysqldb:
+    image: mariadb:latest
+    container_name: secnote_mysql
+    command: --default_authentication_plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=default
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+
   postgres:
     image: postgres
     environment:
@@ -14,14 +29,16 @@ services:
     build:
       context: .
     environment:
-      DB_SCHEMA: default
-      DB_USER: postgres
-      DB_PASSWORD: qwerty
-      DB_HOST: localhost
+      - PGHOST:'db'
+      - PGDATABASE:'postgres'
+      - PGUSER:'postgres'
+      - PGPASSWORD:'postgres'
     depends_on:
-      - postgres
+      #- postgres
+      - mysqldb
     ports:
       - '3000:3000'
 
 volumes:
   database:
+    driver: local

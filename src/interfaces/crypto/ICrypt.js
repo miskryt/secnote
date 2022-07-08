@@ -8,7 +8,7 @@ class ICrypt{
     }
 
     CipherText(text){
-
+        return "Test test"
     }
 
     DecipherText(result, key){

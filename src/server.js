@@ -8,8 +8,8 @@ let twing = new TwingEnvironment(loader);
 const fs = require('fs');
 const https = require('https');
 
-const Notepad = require('./notepad/notepad');
-const notepad = new Notepad();
+const Worker = require('./app/worker');
+const worker = new Worker();
 
 const app = express();
 
@@ -44,9 +44,14 @@ app.post('/', function(req, res) {
 
     const text = req.body.text
 
-    const url = notepad.MakeNote(text);
+    worker.MakeNote(text)
+        .then((res) =>
+        {
+            console.log(res)
+        })
+        .catch(e => console.error(e.stack));
 
-    console.log(url)
+
 
     twing.render('pages/home.twig', renderOptions).then((output) => {
         res.end(output);
