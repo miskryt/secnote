@@ -14,9 +14,7 @@
 
                 <div class="col-md-5">
                     <label for="text" class="form-label">New note</label>
-                    <textarea name="text" class="form-control" id="text" required="" rows="10" placeholder="{% if (result is empty) %}
-                            {{"Write a note"|trim}}
-                        {% endif %}">{{ result }}</textarea>
+                    <textarea name="text" class="form-control" id="text" required="" rows="10" placeholder="{{"Write a note"|trim}}">{{ result }}</textarea>
                     <div class="invalid-feedback">
                         Please enter text.
                     </div>

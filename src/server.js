@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const appname = require('../package.json').name;
-const renderOptions = {'appname': appname};
+const renderOptions = {'appname': appname, 'result':''};
 
 app.get('/', function(req, res) {
     twing.render('pages/home.twig', renderOptions).then((output) => {
@@ -40,18 +40,14 @@ app.get('/', function(req, res) {
     });
 });
 
-app.post('/', function(req, res) {
+app.post('/', async function(req, res) {
 
     const text = req.body.text
+    const baseurl = req.protocol + '://' + req.get('host') + req.originalUrl;;
 
-    worker.MakeNote(text)
-        .then((res) =>
-        {
-            console.log(res)
-        })
-        .catch(e => console.error(e.stack));
-
-
+    const result = await worker.MakeNote(text);
+    const url = [baseurl, result].join('');
+    renderOptions.result = url;
 
     twing.render('pages/home.twig', renderOptions).then((output) => {
         res.end(output);

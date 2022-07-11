@@ -7,7 +7,23 @@ class ICrypt{
 
     }
 
-    CipherText(text)
+    /**
+     * @type {string}
+     */
+    GenerateRandomSecret()
+    {
+        return crypto.randomBytes(14).toString('hex');
+    }
+
+    /**
+     * @type {string}
+     */
+    MakeHashFromEncrypted(encrypted)
+    {
+        return crypto.createHash('md5').update(encrypted).digest('hex');
+    }
+
+    CipherText(text, secret)
     {
         const resizedIV = Buffer.allocUnsafe(16);
         const iv = crypto.createHash('sha256').update('myHashedIV').digest();
@@ -17,27 +33,24 @@ class ICrypt{
         const cipher = crypto.createCipheriv('aes256', key, resizedIV);
 
         let msg = [];
-        msg.push(cipher.update('TEST TEST', 'binary', 'hex'));
+        msg.push(cipher.update(text, 'binary', 'hex'));
         msg.push(cipher.final('hex'));
         msg = msg.join('');
 
-        console.log(msg);
-
-        let msg2 = [];
-        const key2 = crypto.createHash('sha256').update('key').digest();
-        const decipher = crypto.createDecipheriv('aes256', key, resizedIV);
-
-        msg2.push(decipher.update(msg, 'hex', 'binary'));
-        msg2.push(decipher.final('binary'))
-        msg2 = msg2.join('')
-
-        console.log(msg2);
-
-        return "Test test"
+        return msg;
     }
 
-    DecipherText(result, key){
+    DecipherText(secret)
+    {
+        let msg = [];
+        const key = crypto.createHash('sha256').update('key').digest();
+        const decipher = crypto.createDecipheriv('aes256', key, resizedIV);
 
+        msg.push(decipher.update(msg, 'hex', 'binary'));
+        msg.push(decipher.final('binary'))
+        msg = msg.join('')
+
+        return msg;
     }
 
 }

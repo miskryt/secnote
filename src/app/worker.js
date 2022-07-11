@@ -12,40 +12,37 @@ class Worker{
         this.db = new IDB();
     }
 
-    /**
-     * @type {string}
-     */
-    makeHash()
-    {
-        const hash = 'hash'
-        return hash;
-    }
 
-    /**
-     * @type {string}
-     */
-    makeSecret()
-    {
-        this.hash = ''
-        return this.hash;
-    }
-
-    getNoteUrl(){
-        return this.hash + "url";
-    }
 
     /**
      * @type {string}
      */
     async MakeNote(text)
     {
+        const secret = this.crypt.GenerateRandomSecret();
+
         const encrypted = this.crypt.CipherText(text);
-        const secret = this.makeSecret();
-        const hash = this.makeHash();
+
+        const hash = this.crypt.MakeHashFromEncrypted(encrypted);
 
         const res = await this.db.SaveNote(encrypted, hash);
 
-        return (res);
+        if(res)
+        {
+            this.url = this.makeUrl(secret, hash);
+        }
+
+        return (this.url);
+    }
+
+    /**
+     *
+     * @returns {string} url
+     */
+    makeUrl(secret, hash)
+    {
+        const url = [hash, secret].join('#');
+        return url;
     }
 
     /**
