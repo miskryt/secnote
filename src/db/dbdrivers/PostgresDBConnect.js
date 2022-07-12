@@ -35,8 +35,22 @@ class PostgresDBConnect{
         }
     }
 
-    FindByHash(hash){
-        const sql = "select * from table...";
+    /**
+     * @type {Promise<Client>}
+     * */
+    async FindByHash(hash)
+    {
+        const sql = `SELECT text FROM notes_table WHERE hash='${hash}'`;
+
+        try
+        {
+            return await this.query(sql);
+        }
+        catch (err)
+        {
+            console.log(err.stack);
+            return false;
+        }
     }
 
     /**

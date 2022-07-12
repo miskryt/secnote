@@ -35,21 +35,48 @@ const appname = require('../package.json').name;
 const renderOptions = {'appname': appname, 'result':''};
 
 app.get('/', function(req, res) {
+    renderOptions.result = '';
     twing.render('pages/home.twig', renderOptions).then((output) => {
         res.end(output);
     });
 });
 
-app.post('/', async function(req, res) {
+app.post('/', async (req, res) => {
 
     const text = req.body.text
-    const baseurl = req.protocol + '://' + req.get('host') + req.originalUrl;;
+    const baseurl = req.protocol + '://' + req.get('host');
 
     const result = await worker.MakeNote(text);
-    const url = [baseurl, result].join('');
+    const url = [baseurl, result].join('/');
     renderOptions.result = url;
 
     twing.render('pages/home.twig', renderOptions).then((output) => {
+        res.end(output);
+    });
+});
+
+app.get('/:hash/:secret', async (req, res) =>
+{
+    const baseurl = req.protocol + '://' + req.get('host');
+    renderOptions.baseurl = baseurl;
+
+    renderOptions.action = [baseurl, req.params.hash, req.params.secret].join('/');
+
+    twing.render('pages/decrypt-1.twig', renderOptions).then((output) => {
+        res.end(output);
+    });
+
+});
+
+app.post('/:hash/:secret', async (req, res) =>
+{
+    const baseurl = req.protocol + '://' + req.get('host');
+    renderOptions.baseurl = baseurl;
+
+    const result = await worker.ReadNote(req.params.hash, req.params.secret);
+    renderOptions.result = result;
+
+    twing.render('pages/decrypt-2.twig', renderOptions).then((output) => {
         res.end(output);
     });
 });

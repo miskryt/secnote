@@ -16,8 +16,8 @@ class IDB {
 
     async FindByHash(hash)
     {
-        const query = 'select from ... where hash=$hash';
-        return await this.db.query(query);
+        const res = await this.conn.FindByHash(hash);
+        return res.rows[0] ?? false;
     }
 
     /**

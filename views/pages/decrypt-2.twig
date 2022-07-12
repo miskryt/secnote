@@ -1,0 +1,32 @@
+{% extends "base.twig" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container container-lg">
+        <main>
+
+
+                <div class="col-md-5">
+                    <label for="text" class="form-label">New note</label>
+                    <textarea disabled name="text" class="form-control" id="text" required="" rows="10" placeholder="{{"Write a note"|trim}}">{{ result }}</textarea>
+                    <div class="invalid-feedback">
+                        Please enter text.
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <a href="/" class="btn btn-primary" type="submit">New note</a>
+                </div>
+
+
+        </main>
+    </div>
+
+
+{% endblock %}

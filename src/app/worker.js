@@ -21,7 +21,7 @@ class Worker{
     {
         const secret = this.crypt.GenerateRandomSecret();
 
-        const encrypted = this.crypt.CipherText(text);
+        const encrypted =  this.crypt.CipherText(text, secret);
 
         const hash = this.crypt.MakeHashFromEncrypted(encrypted);
 
@@ -29,7 +29,7 @@ class Worker{
 
         if(res)
         {
-            this.url = this.makeUrl(secret, hash);
+            this.url = this.makeUrl(hash, secret);
         }
 
         return (this.url);
@@ -39,20 +39,26 @@ class Worker{
      *
      * @returns {string} url
      */
-    makeUrl(secret, hash)
+    makeUrl(hash, secret)
     {
-        const url = [hash, secret].join('#');
-        return url;
+        return [hash, secret].join('/');
     }
 
     /**
      * url for saved note
-     * @type {string}
+     * @type {array}
      */
-    ReadNote(url) {
-        const {hash, key} = String.split('#');
-        const result = this.db.FindByHash(hash);
-        this.crypt.DecipherText(result, key);
+    async ReadNote(hash, secret)
+    {
+        const encrypted = await this.db.FindByHash(hash);
+
+        if(encrypted != false)
+        {
+            const text = this.crypt.DecipherText(encrypted.text, secret);
+            return text;
+        }
+
+        return false;
     }
 }
 

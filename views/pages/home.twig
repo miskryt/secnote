@@ -10,20 +10,29 @@
 {% block content %}
     <div class="container container-lg">
         <main>
-            <form method="post" class="row g-3 needs-validation" novalidate="">
-
+            {%  if result|length > 0 %}
                 <div class="col-md-5">
-                    <label for="text" class="form-label">New note</label>
-                    <textarea name="text" class="form-control" id="text" required="" rows="10" placeholder="{{"Write a note"|trim}}">{{ result }}</textarea>
-                    <div class="invalid-feedback">
-                        Please enter text.
+                    <div class="url">
+                        {{ result }}
                     </div>
-                </div>
 
-                <div class="col-md-5">
-                    <button class="btn btn-primary" type="submit">Submit form</button>
                 </div>
-            </form>
+            {% else %}
+                <form method="post" class="row g-3 needs-validation" novalidate="">
+
+                    <div class="col-md-5">
+                        <label for="text" class="form-label">New note</label>
+                        <textarea name="text" class="form-control" id="text" required="" rows="10" placeholder="{{"Write a note"|trim}}"></textarea>
+                        <div class="invalid-feedback">
+                            Please enter text.
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                    </div>
+                </form>
+            {% endif %}
         </main>
     </div>
 
