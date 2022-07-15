@@ -60,6 +60,11 @@ class Worker{
 
         return false;
     }
+
+    async DeleteNote(hash)
+    {
+        await this.db.DeleteByHash(hash);
+    }
 }
 
 module.exports = Worker;

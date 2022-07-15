@@ -74,6 +74,7 @@ app.post('/:hash/:secret', async (req, res) =>
     renderOptions.baseurl = baseurl;
 
     const result = await worker.ReadNote(req.params.hash, req.params.secret);
+    await worker.DeleteNote(req.params.hash);
     renderOptions.result = result;
 
     twing.render('pages/decrypt-2.twig', renderOptions).then((output) => {

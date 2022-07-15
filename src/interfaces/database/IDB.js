@@ -20,6 +20,12 @@ class IDB {
         return res.rows[0] ?? false;
     }
 
+    async DeleteByHash(hash)
+    {
+        const res = await this.conn.DeleteByHash(hash);
+        return res.rows[0] ?? false;
+    }
+
     /**
      * @type {boolean}
      * */
