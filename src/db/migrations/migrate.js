@@ -5,40 +5,15 @@ class Migration{
         this.db = new IDB();
     }
 
-    async DropDatabase()
-    {
-        try
-        {
-            const res = await this.db.query('DROP DATABASE notes_db');
-            console.log(res);
-            return true;
-        }
-        catch (error)
-        {
-            //console.error(error.stack);
-            return true;
-        }
-    };
-
-    async CreateDatabase()
-    {
-        try
-        {
-            const res = await this.db.query('CREATE DATABASE notes_db');
-            console.log(res);
-            return true;
-        }
-        catch (error)
-        {
-            console.error(error.stack);
-            return false;
-        }
-    };
-
     async CreateTable()
     {
         const sql = 'CREATE TABLE notes_table (id SERIAL PRIMARY KEY, text TEXT NOT NULL, hash VARCHAR(128) NOT NULL)';
-        console.log(sql)
+        const res = await this.db.query(sql);
+    }
+
+    async DropTable()
+    {
+        const sql = 'DROP TABLE notes_table';
         const res = await this.db.query(sql);
     }
 
@@ -49,18 +24,11 @@ class Migration{
 
     async Migrate()
     {
-        //await this.DropDatabase();
-        //await this.CreateDatabase();
+        await this.DropTable();
         await this.CreateTable();
-
         await this.Close();
     }
 }
 
 
 new Migration().Migrate();
-
-
-//
-
-//migrate.CreateTable();
