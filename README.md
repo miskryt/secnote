@@ -5,9 +5,18 @@ The application allows user to create an encrypted notes that will self-destruct
 
 How to start:
 
+Development mode:
+```
+docker compose up -d\
+&& npm install --save\
+&& npm run migrate\
+&& npm run dev
+```
+
+Production mode:
 ```
 npm install --save\
-&& npm migrate\
+&& npm run migrate\
 && npm run start
 ```
 
