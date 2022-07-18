@@ -3,8 +3,8 @@ RUN mkdir -p /user/secnote
 WORKDIR /user/secnote
 
 COPY . .
-RUN npm install
+RUN npm install --production
 
-EXPOSE 80
+EXPOSE 3000
 
-CMD [ "npm", "run", "pm2" ]
+CMD [ "npm", "run" ]
