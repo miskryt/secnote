@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const http = require('http');
-const Worker = require('./app/worker');
+const Worker = require('./lib/app/worker');
 
 const {TwingEnvironment, TwingLoaderFilesystem} = require('twing');
 let loader = new TwingLoaderFilesystem('./views');
@@ -25,7 +25,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const appname = 'Secnote - stay secure'
+const appname = 'Secnote - stay secure';
 
 app.get('/', function(req, res)
 {
@@ -63,13 +63,13 @@ app.get('/:hash/:secret', async (req, res) =>
     {
         res.end(output);
     });
-
 });
 
 app.post('/:hash/:secret', async (req, res) =>
 {
     const baseurl = req.protocol + '://' + req.get('host');
     const result = await worker.ReadNote(req.params.hash, req.params.secret);
+
     await worker.DeleteNote(req.params.hash);
 
     const renderOptions = {'appname': appname, 'baseurl': baseurl, 'result': result};
