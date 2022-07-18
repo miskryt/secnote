@@ -4,22 +4,17 @@
   "description": "Private notes",
   "main": "./src/server.js",
   "scripts": {
-    "start": "pm2 start processes.json --no-daemon",
+    "start": "node src/server.js --no-daemon",
     "migrate": "node src/db/migrations/migrate.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "db:create": "sequelize-cli db:create"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tropa",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "pg": "^8.7.3",
-    "pm2": "^5.2.0",
-    "sequelize": "^6.21.1",
-    "sequelize-cli": "^6.4.1",
     "twing": "^5.1.1"
   }
 }
