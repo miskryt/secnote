@@ -4,15 +4,18 @@ require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const http = require('http');
-const Worker = require('./lib/app/worker');
+const notesRouter = require('./routes/notes');
+
+//const NoteController = require('./controllers/noteController');
+//const Worker = require('./lib/app/worker');
 
 const {TwingEnvironment, TwingLoaderFilesystem} = require('twing');
 let loader = new TwingLoaderFilesystem('./views');
 let twing = new TwingEnvironment(loader);
 
-
-const worker = new Worker();
+//const controller = new NoteController(new Worker());
 const app = express();
+const router = express.Router()
 
 const options = {};
 
@@ -25,10 +28,16 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const appname = 'Secnote - stay secure';
+app.use('/', notesRouter);
 
+//router.get('/', controller.index);
+//router.post('/create', controller.create.bind(NoteController));
+
+/*
 app.get('/', function(req, res)
 {
+
+
     const renderOptions = {'appname': appname, 'result':''};
 
     twing.render('pages/home.twig', renderOptions).then((output) =>
@@ -79,3 +88,4 @@ app.post('/:hash/:secret', async (req, res) =>
         res.end(output);
     });
 });
+ */
