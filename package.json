@@ -5,9 +5,13 @@
   "main": "./index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon -e js,twig index.js",
     "migrate": "node lib/db/migrations/migrate.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ignore": [],
+    "delay": 1000
   },
   "author": "Tropa",
   "license": "ISC",

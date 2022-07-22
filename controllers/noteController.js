@@ -73,8 +73,6 @@ class NoteController
                     renderOptions.result = "This note was not find, sorry...";
                     response.render('pages/deleted.twig', renderOptions);
                 }
-
-
             });
     }
 }
