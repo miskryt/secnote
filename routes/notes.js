@@ -2,12 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const Worker = require('../lib/app/worker');
 
 const noteController = require('../controllers/noteController');
-const controller = new noteController(new Worker);
-
-
+const controller = new noteController();
 
 router.get('/', controller.index.bind(controller));
 router.post('/', controller.create.bind(controller));

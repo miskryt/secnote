@@ -11,10 +11,10 @@ class NoteController
      */
     static _appname;
 
-    constructor(worker)
+    constructor()
     {
         NoteController._appname = 'Secnote - stay secure';
-        this._worker = worker;
+        this.note = new Note();
     }
 
     _getBaseUrl(request)
@@ -28,21 +28,30 @@ class NoteController
         response.render('pages/home.twig', renderOptions);
     }
 
-    create(request, response)
+    async create(request, response)
     {
         const text = request.body.text
 
-        this._worker.MakeNote(text).then((url) =>
-        {
-            const result = [this._getBaseUrl(request), url].join('/');
+        const note = new Note();
 
+        if(await note.setText(text).encrypt().save())
+        {
             const renderOptions = {
                 'appname': NoteController._appname,
-                result
+                'result' : [this._getBaseUrl(request), note.getUrl()].join('/')
             };
 
             response.render('pages/home.twig', renderOptions);
-        });
+        }
+        else
+        {
+            const renderOptions = {
+                'appname': NoteController._appname,
+                'result' : 'There is some error...'
+            };
+
+            response.render('pages/home.twig', renderOptions);
+        }
     }
 
     read(request, response)
@@ -55,25 +64,23 @@ class NoteController
         response.render('pages/decrypt-1.twig', renderOptions);
     }
 
-    decrypt(request, response)
+    async decrypt(request, response)
     {
         let renderOptions = {'appname' : NoteController._appname,};
 
-        this._worker.ReadNote(request.params.hash, request.params.secret)
-            .then((result) =>
-            {
-                if(result)
-                {
-                    this._worker.DeleteNote(request.params.hash);
-                    renderOptions.result = result;
-                    response.render('pages/decrypt-2.twig', renderOptions);
-                }
-                else
-                {
-                    renderOptions.result = "This note was not find, sorry...";
-                    response.render('pages/deleted.twig', renderOptions);
-                }
-            });
+        const result = this.note.read(request.params.hash, request.params.secret);
+
+        if(result)
+        {
+            await this.note.delete(request.params.hash);
+            renderOptions.result = result;
+            response.render('pages/decrypt-2.twig', renderOptions);
+        }
+        else
+        {
+            renderOptions.result = "This note was not find, sorry...";
+            response.render('pages/deleted.twig', renderOptions);
+        }
     }
 }
 
