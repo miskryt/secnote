@@ -14,7 +14,8 @@ class NoteController
     constructor()
     {
         NoteController._appname = 'Secnote - stay secure';
-        this.note = new Note();
+
+        this._note = new Note();
     }
 
     _getBaseUrl(request)
@@ -32,13 +33,11 @@ class NoteController
     {
         const text = request.body.text
 
-        const note = new Note();
-
-        if(await note.setText(text).encrypt().save())
+        if(await this._note.setText(text).encrypt().save())
         {
             const renderOptions = {
                 'appname': NoteController._appname,
-                'result' : [this._getBaseUrl(request), note.getUrl()].join('/')
+                'result' : [this._getBaseUrl(request), this._note.url()].join('/')
             };
 
             response.render('pages/home.twig', renderOptions);
@@ -68,18 +67,19 @@ class NoteController
     {
         let renderOptions = {'appname' : NoteController._appname,};
 
-        const result = this.note.read(request.params.hash, request.params.secret);
+        const result = await this._note.read(request.params.hash, request.params.secret);
 
         if(result)
         {
-            await this.note.delete(request.params.hash);
+            await this._note.delete(request.params.hash);
+
             renderOptions.result = result;
-            response.render('pages/decrypt-2.twig', renderOptions);
+            await response.render('pages/decrypt-2.twig', renderOptions);
         }
         else
         {
             renderOptions.result = "This note was not find, sorry...";
-            response.render('pages/deleted.twig', renderOptions);
+            await response.render('pages/deleted.twig', renderOptions);
         }
     }
 }

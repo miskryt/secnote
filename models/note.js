@@ -1,41 +1,56 @@
 "use strict"
 
-const IDB = require('../lib/interfaces/database/IDB');
+const DB = require('../lib/interfaces/database/IDB');
 const ICrypt = require('../lib/interfaces/crypto/ICrypt');
 
 class Note
 {
+    _crypt;
+    _db;
+
     constructor()
     {
-        this.crypt = new ICrypt();
-        this.db = new IDB();
+        this._crypt = new ICrypt();
+        this._db = new DB();
     }
 
-    setText(text)
+     setText(text)
     {
-        this.text = text;
+        this._text = text;
         return this;
     }
 
-    getUrl()
+    /**
+     * @readonly
+     * @returns {string}
+     * @memberof Note
+     */
+    url()
     {
-        return this.url;
+        return this._url;
     }
 
     encrypt()
     {
-        this.encrypted = this.crypt.CipherText(this.text, this.crypt.GenerateRandomSecret());
+        this._secret = this._crypt.GenerateRandomSecret();
+        this._encrypted = this._crypt.CipherText(this._text, this._secret);
+
         return this;
     }
 
     async save()
     {
-        const hash = this.crypt.MakeHashFromEncrypted(this.encrypted);
-        const secret = this.crypt.GenerateRandomSecret();
-        this.url =  [hash, secret].join('/');
+        if(this._encrypted === undefined || this._encrypted.length === 0)
+            return false;
 
-        const res = await this.db.SaveNote(
-            this.encrypted,
+        if(this._text === undefined || this._text.length === 0)
+            return false;
+
+        const hash = this._crypt.MakeHashFromEncrypted(this._encrypted);
+        this._url =  [hash, this._secret].join('/');
+
+        const res = await this._db.SaveNote(
+            this._encrypted,
             hash
         );
 
@@ -49,11 +64,11 @@ class Note
 
     async read(hash, secret)
     {
-        const encrypted = await this.db.FindByHash(hash);
+        const encrypted = await this._db.FindByHash(hash);
 
         if(encrypted != false)
         {
-            const text = this.crypt.DecipherText(encrypted.text, secret);
+            const text = this._crypt.DecipherText(encrypted, secret);
             return text;
         }
 
@@ -62,7 +77,7 @@ class Note
 
     async delete(hash)
     {
-        await this.db.DeleteByHash(hash);
+        await this._db.DeleteByHash(hash);
     }
 }
 
